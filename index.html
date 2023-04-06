@@ -1,0 +1,111 @@
+<?php 
+
+include("config/connexion.php");
+if(isset($_POST['NomE'])){
+	extract($_POST);
+
+	$insert_eleve='INSERT INTO eleve(NomE,PrenomE,DLNE,SexeE,EPE,ContactE,NE) VALUES (?,?,?,?,?,?,?)';
+
+	$insert=$pdo->prepare($insert_eleve);
+
+	$insert->execute([$NomE,$PrenomE,$DLNE,$SexeE[0],$EPE,$ContactE,$NE]);
+
+}
+include("config/connexion.php");//connexion
+//recueper les donnees de la tale eleve
+    $recuperation = $pdo->query("SELECT * FROM eleve");
+    $donnees = $recuperation->fetchAll(PDO::FETCH_OBJ);
+
+     if(isset($_GET['id_eleve'])){
+        $reponse = $pdo->query("DELETE  FROM eleve WHERE IDE='".$_GET['id_eleve']."'");//supprimer ...
+        header("Location: index.php");
+    }
+
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="StyleformulaireEleve.css">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body background="images/1.png">
+
+
+
+	<center>
+     <fieldset>
+     	<form method="POST" action="index.php">
+     		<h1>Eleve</h1>
+            <hr>
+     		<table>
+     			     			<tr>
+     				<td>Nom:  </td><td><input type="text" name="NomE" required=""><br><br></td>
+     			</tr>
+     			     			<tr>
+     				<td>Prénom:  </td><td><input type="text" name="PrenomE" required=""><br><br></td><br>
+     			</tr>
+     			     			<tr>
+     				<td>Date et lieu de naissance:  </td><td><input type="date/text" name="DLNE" required=""><br><br></td>
+     			</tr>
+<tr>
+<td>Sexe: </td><td>
+<input type="Radio" value="Homme" name="SexeE[]"><label>Homme</label>
+<input type="Radio" value="Femme" name="SexeE[]"><label>Femme</label>
+</td>
+</tr>
+     			     			<tr>
+     				<td>Nationalité:  </td><td><input type="text" name="NE" required=""><br><br></td>
+     			</tr>
+     			     			<tr>
+     				<td>Etablissement de provenance:  </td><td><input type="text" name="EPE" required=""><br><br></td>
+     			</tr>
+     			     			<tr>
+     				<td>Contact:  </td><td><input type="number" name="ContactE" required=""><br><br></td>
+     			</tr>
+
+     			 <tr>
+     				<td><input type="submit" value="Enregistrer"><br><br></td>
+     			</tr>
+
+
+     			<td>
+     		       <button>
+     				<a href="FormulaireSanté.php">Suivant</a>
+     		       </button>
+     			</td>
+
+     		</table>
+     	</form>
+
+<table class="table table-striped">
+	<tr>
+		<th>NomE</th>
+		<th>PrenomE</th>
+		<th>DLNE</th>
+		<th>SexeE</th>
+		<th>NE</th>
+		<th>EPE</th>
+		<th>ContactE</th>
+		<th colspan="2" style="text-align:center;">Option</th>
+	</tr>
+	<?php foreach ($donnees as $value) {?>
+		<tr>
+			<td> <?php echo $value->NomE; ?> </td>
+			<td> <?php echo $value->PrenomE; ?> </td>
+			<td> <?php echo $value->DLNE; ?> </td>
+			<td> <?php echo $value->SexeE; ?> </td>
+			<td> <?php echo $value->NE; ?> </td>
+			<td> <?php echo $value->EPE; ?> </td>
+			<td> <?php echo $value->ContactE; ?> </td>
+			<td><a href="index.php?id_eleve=<?php echo $value->IDE; ?>">Supprimer</a></td>
+			<td><a href="modifier.php?id_eleve=<?php echo $value->IDE; ?>">Modifier</a></td>
+		</tr>
+	<?php }?>
+</table>
+
+     </fieldset>
+     </center>
+</body>
+</html>
